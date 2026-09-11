@@ -15,5 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "compose-handwriting-loader"
 
-include(":library")
+include(":compose-handwriting-loader")
 include(":sample")

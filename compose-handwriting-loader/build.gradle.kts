@@ -20,8 +20,11 @@ kotlin {
         }
     }
 
+    // iosX64 (Intel simulator) deliberately omitted — matches what this Compose Multiplatform
+    // version actually publishes artifacts for (arm64 device + arm64 simulator only); requesting
+    // it fails dependency resolution for compose.runtime/foundation/ui with an "Unresolved
+    // platforms: [iosX64]" error.
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
@@ -36,6 +39,11 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.ui)
+            // Only for LocalContentColor (the default `color` follows the caller's Material
+            // theme) and Text. A reasonable dependency for a Compose Multiplatform UI library —
+            // most consumers will already be on Material3 — but if that ever needs to change,
+            // this is the one place it's pulled in.
+            implementation(compose.material3)
         }
         val androidMain by getting {
             dependencies {
@@ -50,13 +58,13 @@ kotlin {
 // gradle.properties (GROUP/VERSION_NAME/POM_*) at the root. Signing/credentials come from
 // ~/.gradle/gradle.properties or environment variables at publish time — never from this file —
 // so this build script alone is safe to keep public with no secrets in it.
+//
+// No explicit coordinates(...) call here: the Android KMP library plugin already finalizes
+// groupId itself, and calling coordinates() afterward conflicts with that ("property is final").
+// groupId/version come from gradle.properties' GROUP/VERSION_NAME (vanniktech's own convention),
+// and artifactId defaults to this module's own name — which is why this directory is named
+// compose-handwriting-loader rather than a generic "library".
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
-
-    coordinates(
-        groupId = project.findProperty("GROUP") as String,
-        artifactId = "compose-handwriting-loader",
-        version = project.findProperty("VERSION_NAME") as String,
-    )
 }

@@ -1,6 +1,8 @@
 [versions]
 agp = "9.2.1"
-android-compileSdk = "36"
+# 37, not 36: androidx.core 1.19.0 requires compiling against API 37 or later (a real
+# "checkDebugAarMetadata" failure otherwise) — confirmed via a local build attempt.
+android-compileSdk = "37"
 android-minSdk = "24"
 android-targetSdk = "36"
 composeMultiplatform = "1.11.1"
@@ -8,10 +10,10 @@ kotlin = "2.4.10"
 mavenPublish = "0.30.0"
 
 [libraries]
-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "composeMultiplatform" }
+# Everything else (runtime/foundation/ui/material3/preview/uiTooling in the sample) goes through
+# the Compose Multiplatform Gradle plugin's own compose.* accessors instead of hand-pinned
+# versions here — material3 in particular ships under its own version number, independent of
+# composeMultiplatform, so hardcoding it caused a real "could not find" resolution failure.
 compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 compose-uiTooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.13.0" }
@@ -19,7 +21,6 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version = "1.19.0" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
-androidKotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

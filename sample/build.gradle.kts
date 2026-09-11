@@ -1,14 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.androidKotlin)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-    }
 }
 
 android {
@@ -34,11 +27,15 @@ android {
 }
 
 dependencies {
-    implementation(project(":library"))
+    implementation(project(":compose-handwriting-loader"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.compose.ui)
-    implementation(libs.compose.material3)
-    implementation(libs.compose.uiToolingPreview)
-    debugImplementation(libs.compose.uiTooling)
+    // compose.* (not libs.compose.*) — the Compose Multiplatform Gradle plugin's own accessors,
+    // guaranteed to resolve to versions that actually exist and work together, unlike hardcoding
+    // a version-catalog entry per artifact (material3 in particular ships under its own version
+    // number, not composeMultiplatform's).
+    implementation(compose.ui)
+    implementation(compose.material3)
+    implementation(compose.preview)
+    debugImplementation(compose.uiTooling)
 }
