@@ -5,7 +5,7 @@ Multiplatform](https://www.jetbrains.com/compose-multiplatform/) — Android and
 Kotlin implementation. Text appears as if it's being written left to right, with a slanted ink-wipe
 edge and a small traveling pen tip.
 
-Originally built as the splash-screen animation for [Satia](https://satia.app), pulled out into
+Originally built as the splash-screen animation for [Satia](https://onelink.to/543f2f), pulled out into
 its own library so it's reusable (and configurable) beyond that one app.
 
 ## Install
