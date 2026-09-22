@@ -25,6 +25,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rimshadpcs.composehandwriting.HandwritingLoader
+import kotlinx.coroutines.delay
 
 private val swatches = listOf(
     Color.Black,
@@ -53,10 +55,48 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    SampleScreen()
+                    // The launch screen: a clean, controls-free repeating loop — meant for
+                    // recording a demo GIF/video for the README, not for trying out parameters.
+                    // Swap back to SampleScreen() below for the interactive playground with
+                    // text/size/duration/color controls.
+                    SplashLoopScreen()
                 }
             }
         }
+    }
+}
+
+// Repeats the "satia" reveal indefinitely: write, hold on the finished word for a beat, then
+// loop — via a plain counter `key` that HandwritingLoader restarts on each change (see its own
+// `key` param doc). No dismiss/interaction of any kind, by design, for a clean screen recording.
+private const val SPLASH_WRITE_DURATION_MILLIS = 1500
+private const val SPLASH_HOLD_MILLIS = 1100
+
+@Composable
+private fun SplashLoopScreen() {
+    var loopKey by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay((SPLASH_WRITE_DURATION_MILLIS + SPLASH_HOLD_MILLIS).toLong())
+            loopKey++
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
+        contentAlignment = Alignment.Center,
+    ) {
+        HandwritingLoader(
+            text = "satia",
+            key = loopKey,
+            fontSize = 64.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            durationMillis = SPLASH_WRITE_DURATION_MILLIS,
+        )
     }
 }
 
