@@ -8,6 +8,9 @@ edge and a small traveling pen tip.
 Originally built as the splash-screen animation for [Satia](https://onelink.to/543f2f), pulled out into
 its own library so it's reusable (and configurable) beyond that one app.
 
+<img width="636" height="1200" alt="satiagif" src="https://github.com/user-attachments/assets/b6a6168a-b574-4f93-b7dc-72fa6187460c" />
+
+
 ## Install
 
 ```kotlin
